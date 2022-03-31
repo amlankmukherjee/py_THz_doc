@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>SignalRecoveryClass module &#8212; Terahertz Instrument Control 0.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-SignalRecoveryClass">
+<span id="signalrecoveryclass-module"></span><h1>SignalRecoveryClass module<a class="headerlink" href="#module-SignalRecoveryClass" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">SignalRecoveryClass.</span></span><span class="sig-name descname"><span class="pre">SignalRecoveryClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_addr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="TCPIPBaseClass.html#TCPIPBaseClass.TCPIPBaseClass" title="TCPIPBaseClass.TCPIPBaseClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">TCPIPBaseClass.TCPIPBaseClass</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.OP_CURR_MODE_HIGH_BW">
+<span class="sig-name descname"><span class="pre">OP_CURR_MODE_HIGH_BW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.OP_CURR_MODE_HIGH_BW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.OP_CURR_MODE_LOW_NOISE">
+<span class="sig-name descname"><span class="pre">OP_CURR_MODE_LOW_NOISE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.OP_CURR_MODE_LOW_NOISE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.OP_VOLT_MODE">
+<span class="sig-name descname"><span class="pre">OP_VOLT_MODE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.OP_VOLT_MODE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_CH_BACK_IN">
+<span class="sig-name descname"><span class="pre">REF_CH_BACK_IN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_CH_BACK_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_CH_FRONT_IN">
+<span class="sig-name descname"><span class="pre">REF_CH_FRONT_IN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_CH_FRONT_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_CH_INTERNAL">
+<span class="sig-name descname"><span class="pre">REF_CH_INTERNAL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_CH_INTERNAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_DUAL_HARMONIC">
+<span class="sig-name descname"><span class="pre">REF_DUAL_HARMONIC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_DUAL_HARMONIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_DUAL_REF">
+<span class="sig-name descname"><span class="pre">REF_DUAL_REF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_DUAL_REF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.REF_SINGLE_REF">
+<span class="sig-name descname"><span class="pre">REF_SINGLE_REF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.REF_SINGLE_REF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.disable_front_panel">
+<span class="sig-name descname"><span class="pre">disable_front_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.disable_front_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.disable_front_panel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables instrument front panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.enable_front_panel">
+<span class="sig-name descname"><span class="pre">enable_front_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.enable_front_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.enable_front_panel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables instrument front panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.read_mag_pha">
+<span class="sig-name descname"><span class="pre">read_mag_pha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_channel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.read_mag_pha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.read_mag_pha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads magnitude and phase values from channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out_channel</strong> – (optional) Channel number in dual channel mode</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float array of form [MAG, PHA] for single channel or [MAG1, PHA1, MAG2, PHA2] for dual channel</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.read_mag_pha_bulk">
+<span class="sig-name descname"><span class="pre">read_mag_pha_bulk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_int</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_pts</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.read_mag_pha_bulk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.read_mag_pha_bulk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads instrument data over a bulk time duration at specified time intervals. Maximum data points should be below
+50,000 for single channel measurement and 25,000 for dual channel measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>read_int</strong> – Time interval in SECONDS for data logging</p></li>
+<li><p><strong>num_pts</strong> – Number of points to be read</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2-D list of magnitude and phase (in degrees) data in format [MAG, PHA] and in [MAG1, PHA1, MAG2, PHA2]
+format for dual mode</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentConfigError" title="CustomErrors.InstrumentConfigError"><strong>InstrumentConfigError</strong></a> – if data buffer size is exceeded</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.set_ref_input">
+<span class="sig-name descname"><span class="pre">set_ref_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.set_ref_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.set_ref_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets reference the connector for reference signal input. Choose among “REF_CH” constants defined in the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channel</strong> – Set 1 or 2 to select the channel in dual reference mode. Ignored for other modes of operation.</p></li>
+<li><p><strong>in_port</strong> – Choice of input connector for the reference signal</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.set_ref_mode">
+<span class="sig-name descname"><span class="pre">set_ref_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op_mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harm1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harm2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.set_ref_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.set_ref_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets reference mode for the instrument. Choose among “REF”-mode constants defined in the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op_mode</strong> – Reference mode</p></li>
+<li><p><strong>harm1</strong> – (optional) Harmonic 1, an integer between 1-256. Only for dual harmonic mode, else ignored.</p></li>
+<li><p><strong>harm2</strong> – (optional) Harmonic 2, an integer between 1-256. Only for dual harmonic mode, else ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SignalRecoveryClass.SignalRecoveryClass.set_volt_curr_op">
+<span class="sig-name descname"><span class="pre">set_volt_curr_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SignalRecoveryClass.html#SignalRecoveryClass.set_volt_curr_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SignalRecoveryClass.SignalRecoveryClass.set_volt_curr_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets voltage or current mode for the instrument. Choose among “OP”-mode constants defined in class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>op_mode</strong> – Operational mode</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if operation fails due to connection issues</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Terahertz Instrument Control</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Amlan kusum Mukherjee.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/source/SignalRecoveryClass.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
