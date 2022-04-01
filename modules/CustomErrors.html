@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CustomErrors &#8212; Terahertz Instrument Control 0.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../static/documentation_options.js"></script>
+    <script src="../static/jquery.js"></script>
+    <script src="../static/underscore.js"></script>
+    <script src="../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for CustomErrors</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="ErrorBaseClass"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.ErrorBaseClass">[docs]</a><span></span><span class="k">class</span> <span class="nc">ErrorBaseClass</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">ERROR_FATAL</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">ERROR_NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ERROR_WARN</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ERROR_INFO</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="InstrumentInitialisationError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.InstrumentInitialisationError">[docs]</a><span class="k">class</span> <span class="nc">InstrumentInitialisationError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instr_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">instr_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> \
+            <span class="s1">&#39;Error initialising instrument:</span><span class="se">\n</span><span class="s1">type -&gt; </span><span class="si">{}</span><span class="s1">, address -&gt; </span><span class="si">{}</span><span class="s1">!&#39;</span> \
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Please check connections and connection parameters.</span><span class="se">\n</span><span class="s1">Error Message: </span><span class="si">{}</span><span class="s1">&#39;</span>\
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instr_type</span><span class="p">,</span> <span class="n">instr_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_FATAL</span></div>
+
+
+<div class="viewcode-block" id="InstrumentIOError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.InstrumentIOError">[docs]</a><span class="k">class</span> <span class="nc">InstrumentIOError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Instrument IO Error Occurred!&#39;</span> \
+                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Error Message: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_FATAL</span></div>
+
+
+<div class="viewcode-block" id="InstrumentOperationError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.InstrumentOperationError">[docs]</a><span class="k">class</span> <span class="nc">InstrumentOperationError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_WARN</span></div>
+
+
+<div class="viewcode-block" id="InstrumentWriteError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.InstrumentWriteError">[docs]</a><span class="k">class</span> <span class="nc">InstrumentWriteError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Error after data write operation!&quot;</span> \
+                       <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error Message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_FATAL</span></div>
+
+
+<div class="viewcode-block" id="InstrumentConfigError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.InstrumentConfigError">[docs]</a><span class="k">class</span> <span class="nc">InstrumentConfigError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Error in instrument configuration!&quot;</span> \
+                       <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error Message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_INFO</span></div>
+
+
+<div class="viewcode-block" id="CodeConfigurationError"><a class="viewcode-back" href="../source/CustomErrors.html#CustomErrors.CodeConfigurationError">[docs]</a><span class="k">class</span> <span class="nc">CodeConfigurationError</span><span class="p">(</span><span class="n">ErrorBaseClass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Code configuration error!&quot;</span> \
+                       <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error Message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ERROR_INFO</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Terahertz Instrument Control</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Amlan kusum Mukherjee.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

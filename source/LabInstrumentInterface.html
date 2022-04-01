@@ -35,14 +35,14 @@
 <span id="labinstrumentinterface-module"></span><h1>LabInstrumentInterface module<a class="headerlink" href="#module-LabInstrumentInterface" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="LabInstrumentInterface.LabInstrumentInterface">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">LabInstrumentInterface.</span></span><span class="sig-name descname"><span class="pre">LabInstrumentInterface</span></span><a class="reference internal" href="../_modules/LabInstrumentInterface.html#LabInstrumentInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">LabInstrumentInterface.</span></span><span class="sig-name descname"><span class="pre">LabInstrumentInterface</span></span><a class="reference internal" href="../modules/LabInstrumentInterface.html#LabInstrumentInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface for all lab instrument objects. Each type of “lab instrument” should inherit the
 LabInstrumentInterface. i.e., have defined functions of reading, writing and querying data. Read and query
 commands should return string values. Write and query commands should take commands/data as string for input</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="LabInstrumentInterface.LabInstrumentInterface.query_data">
-<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/LabInstrumentInterface.html#LabInstrumentInterface.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.query_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../modules/LabInstrumentInterface.html#LabInstrumentInterface.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.query_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic function template to query data on an instrument</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -56,7 +56,7 @@ commands should return string values. Write and query commands should take comma
 
 <dl class="py method">
 <dt class="sig sig-object py" id="LabInstrumentInterface.LabInstrumentInterface.read_data">
-<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/LabInstrumentInterface.html#LabInstrumentInterface.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.read_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../modules/LabInstrumentInterface.html#LabInstrumentInterface.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.read_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic function template to read data from an instrument</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -70,7 +70,7 @@ commands should return string values. Write and query commands should take comma
 
 <dl class="py method">
 <dt class="sig sig-object py" id="LabInstrumentInterface.LabInstrumentInterface.write_data">
-<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LabInstrumentInterface.html#LabInstrumentInterface.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.write_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/LabInstrumentInterface.html#LabInstrumentInterface.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LabInstrumentInterface.LabInstrumentInterface.write_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic function template to write data/command on an instrument</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

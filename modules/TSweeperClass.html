@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TSweeperClass &#8212; Terahertz Instrument Control 0.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../static/documentation_options.js"></script>
+    <script src="../static/jquery.js"></script>
+    <script src="../static/underscore.js"></script>
+    <script src="../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for TSweeperClass</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">CustomErrors</span> <span class="k">as</span> <span class="nn">Err</span>
+<span class="kn">from</span> <span class="nn">TCPIPBaseClass</span> <span class="kn">import</span> <span class="n">TCPIPBaseClass</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">pyvisa</span>
+
+
+<div class="viewcode-block" id="TSweeperClass"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass">[docs]</a><span class="k">class</span> <span class="nc">TSweeperClass</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_save_data_in_file</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
+                <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6006</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;TSweeper Fraunhofer HHI&#39;</span>
+
+<div class="viewcode-block" id="TSweeperClass.read_1scan"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_1scan">[docs]</a>    <span class="k">def</span> <span class="nf">read_1scan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a single T-Sweeper scan.</span>
+
+<span class="sd">        :returns: A numpy array of scan values in sets as (Frequency in MHz, Magnitude of current in A.U., Phase of the detector current in radians).</span>
+<span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+            <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+            <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Read operation failed!. </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">arr_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">act_data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i_ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">act_data</span><span class="p">)):</span>
+            <span class="n">arr_data</span><span class="p">[</span><span class="n">i_ctr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">act_data</span><span class="p">[</span><span class="n">i_ctr</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arr_data</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.read_n_save"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_save">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">read_wait_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_saves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads T-Sweeper scans continuously until either file limit or timeout is reached. Function saves each scan as a</span>
+<span class="sd">        separate file in the specified file location.</span>
+
+<span class="sd">        :param file_loc: Location for the files to be saved</span>
+<span class="sd">        :param file_name: Name of the file. An integer number is appended to the file name.</span>
+<span class="sd">        :param read_wait_s: Wait between data reads in seconds. Should be set equal to or slightly larger than the refresh rate of the TSweeper buffer. If set smaller than refresh rate, same data will be saved in the files until the buffer is updated.</span>
+<span class="sd">        :param num_saves: Number of files to be saved, default = 1</span>
+<span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
+<span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">num_files</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">or</span> <span class="n">num_files</span> <span class="o">&lt;=</span> <span class="n">num_saves</span><span class="p">:</span>
+                <span class="n">num_files</span> <span class="o">=</span> <span class="n">num_files</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span>
+                <span class="n">last_read</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\\</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num_files</span><span class="p">),</span> <span class="n">act_data</span><span class="p">)</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">read_wait_s</span> <span class="o">+</span> <span class="n">last_read</span> <span class="o">-</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Read operation failed!. </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.write_data"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deprecated for TSweeperClass.</span>
+
+<span class="sd">        :raises CodeConfigurationError: when invoked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">err_str</span> <span class="o">=</span> <span class="s2">&quot;Writing data is not allowed for TSweeper system!&quot;</span>
+        <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.read_data"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deprecated for TSweeperClass.</span>
+
+<span class="sd">        :raises CodeConfigurationError: when invoked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">err_str</span> <span class="o">=</span> <span class="s2">&quot;Use other read functions for the TSweeper object!&quot;</span>
+        <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.query_data"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.query_data">[docs]</a>    <span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deprecated for TSweeperClass.</span>
+
+<span class="sd">        :raises CodeConfigurationError: when invoked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">err_str</span> <span class="o">=</span> <span class="s2">&quot;Querying data is not allowed for TSweeper system!&quot;</span>
+        <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Terahertz Instrument Control</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Amlan kusum Mukherjee.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

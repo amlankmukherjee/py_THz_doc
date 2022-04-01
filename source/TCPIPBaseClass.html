@@ -35,18 +35,18 @@
 <span id="tcpipbaseclass-module"></span><h1>TCPIPBaseClass module<a class="headerlink" href="#module-TCPIPBaseClass" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="TCPIPBaseClass.TCPIPBaseClass">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">TCPIPBaseClass.</span></span><span class="sig-name descname"><span class="pre">TCPIPBaseClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_addr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TCPIPBaseClass.html#TCPIPBaseClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">TCPIPBaseClass.</span></span><span class="sig-name descname"><span class="pre">TCPIPBaseClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_addr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/TCPIPBaseClass.html#TCPIPBaseClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="LabInstrumentInterface.html#LabInstrumentInterface.LabInstrumentInterface" title="LabInstrumentInterface.LabInstrumentInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabInstrumentInterface.LabInstrumentInterface</span></code></a></p>
 <p>Class to create generic TCP/IP instrument object.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="TCPIPBaseClass.TCPIPBaseClass.close_comm">
-<span class="sig-name descname"><span class="pre">close_comm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TCPIPBaseClass.html#TCPIPBaseClass.close_comm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.close_comm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">close_comm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/TCPIPBaseClass.html#TCPIPBaseClass.close_comm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.close_comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function close connection to GPIB device and clear the buffers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TCPIPBaseClass.TCPIPBaseClass.query_data">
-<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TCPIPBaseClass.html#TCPIPBaseClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.query_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/TCPIPBaseClass.html#TCPIPBaseClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.query_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to send query to the GPIB Device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -63,7 +63,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TCPIPBaseClass.TCPIPBaseClass.read_data">
-<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TCPIPBaseClass.html#TCPIPBaseClass.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.read_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/TCPIPBaseClass.html#TCPIPBaseClass.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.read_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to read data from the GPIB Device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -74,7 +74,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TCPIPBaseClass.TCPIPBaseClass.write_data">
-<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TCPIPBaseClass.html#TCPIPBaseClass.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.write_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/TCPIPBaseClass.html#TCPIPBaseClass.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCPIPBaseClass.TCPIPBaseClass.write_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to send data/command to the GPIB Device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
