@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>COMBaseClass module &#8212; Terahertz Instrument Control 0.0.4 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../static/documentation_options.js"></script>
-    <script src="../static/jquery.js"></script>
-    <script src="../static/underscore.js"></script>
-    <script src="../static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
-  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -35,18 +35,18 @@
 <span id="combaseclass-module"></span><h1>COMBaseClass module<a class="headerlink" href="#module-COMBaseClass" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="COMBaseClass.COMBaseClass">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">COMBaseClass.</span></span><span class="sig-name descname"><span class="pre">COMBaseClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/COMBaseClass.html#COMBaseClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">COMBaseClass.</span></span><span class="sig-name descname"><span class="pre">COMBaseClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/COMBaseClass.html#COMBaseClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="LabInstrumentInterface.html#LabInstrumentInterface.LabInstrumentInterface" title="LabInstrumentInterface.LabInstrumentInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabInstrumentInterface.LabInstrumentInterface</span></code></a></p>
 <p>Class to create generic serial instrument object.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="COMBaseClass.COMBaseClass.close_comm">
-<span class="sig-name descname"><span class="pre">close_comm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/COMBaseClass.html#COMBaseClass.close_comm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.close_comm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">close_comm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/COMBaseClass.html#COMBaseClass.close_comm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.close_comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function close connection to Serial and clear the buffers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="COMBaseClass.COMBaseClass.query_data">
-<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/COMBaseClass.html#COMBaseClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.query_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/COMBaseClass.html#COMBaseClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.query_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to send query to the serial device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -63,7 +63,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="COMBaseClass.COMBaseClass.read_data">
-<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/COMBaseClass.html#COMBaseClass.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.read_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/COMBaseClass.html#COMBaseClass.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.read_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to read data from the serial Device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -74,7 +74,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="COMBaseClass.COMBaseClass.write_data">
-<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../modules/COMBaseClass.html#COMBaseClass.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.write_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/COMBaseClass.html#COMBaseClass.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#COMBaseClass.COMBaseClass.write_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to send data/command to the serial Device</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
