@@ -39,6 +39,12 @@
 
 
 <div class="viewcode-block" id="SignalRecoveryClass"><a class="viewcode-back" href="../source/SignalRecoveryClass.html#SignalRecoveryClass.SignalRecoveryClass">[docs]</a><span class="k">class</span> <span class="nc">SignalRecoveryClass</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to create Ametek signal recovery (lock-in) system object.</span>
+
+<span class="sd">    :param ip_addr: IP address of the instrument as string.</span>
+<span class="sd">    :param port: Port number of the instrument as an integer. Defaults to 50001.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">OP_VOLT_MODE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">OP_CURR_MODE_HIGH_BW</span> <span class="o">=</span> <span class="mi">1</span>
@@ -55,8 +61,8 @@
     <span class="n">_MAG_PHA_2_MODE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;110000000000000001100&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">_MAG_PHA_1_MODE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;1100&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SignalRecoveryClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="mi">50001</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">50001</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SignalRecoveryClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">firmware</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_version</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

@@ -41,19 +41,23 @@
 <div class="viewcode-block" id="TSweeperClass"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass">[docs]</a><span class="k">class</span> <span class="nc">TSweeperClass</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to create T-Sweeper system object.</span>
+
+<span class="sd">    :param ip_addr: IP address of the instrument as string. Defaults to &#39;127.0.0.1&#39;.</span>
+<span class="sd">    :param port: Port number of the instrument as an integer. Defaults to 6006.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_save_data_in_file</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_save_data_in_file</span><span class="p">(</span><span class="n">data_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">file_full_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\\</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num_files</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
                 <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6006</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_addr</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6006</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;TSweeper Fraunhofer HHI&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;TSweeper: Fraunhofer HHI/Toptica&#39;</span>
 
 <div class="viewcode-block" id="TSweeperClass.read_1scan"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_1scan">[docs]</a>    <span class="k">def</span> <span class="nf">read_1scan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -76,10 +80,38 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">act_data</span><span class="p">[</span><span class="n">i_ctr</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">arr_data</span></div>
 
-<div class="viewcode-block" id="TSweeperClass.read_n_save"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_save">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">read_wait_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_saves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<div class="viewcode-block" id="TSweeperClass.read_n_exec_periodic"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_exec_periodic">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_exec_periodic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait_btwn_reads_s</span><span class="p">,</span> <span class="n">num_loops</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="n">exec_fcn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reads T-Sweeper scans continuously until either file limit or timeout is reached. Function saves each scan as a</span>
-<span class="sd">        separate file in the specified file location.</span>
+<span class="sd">        Reads periodically T-Sweeper and executes a function scans until either file limit or timeout is reached. (</span>
+<span class="sd">        Files with duplicate values can be saved if wait between reads and buffer update are not properly matched.)</span>
+
+<span class="sd">        :param wait_btwn_reads_s: Wait between data reads in seconds. Should be set equal to or slightly larger than the refresh rate of the TSweeper buffer. If set smaller than refresh rate, same data will be saved in the files until the buffer is updated.</span>
+<span class="sd">        :param num_loops: Number of files to be saved, default = 1</span>
+<span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
+<span class="sd">        :param exec_fcn: Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</span>
+<span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">loop_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">and</span> <span class="n">loop_num</span> <span class="o">&lt;</span> <span class="n">num_loops</span><span class="p">:</span>
+                <span class="n">loop_num</span> <span class="o">=</span> <span class="n">loop_num</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span>
+                <span class="n">last_read</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">exec_fcn</span><span class="p">(</span><span class="n">act_data</span><span class="p">,</span> <span class="n">loop_num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">wait_btwn_reads_s</span> <span class="o">+</span> <span class="n">last_read</span> <span class="o">-</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Read operation failed!. </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.read_n_save_periodic"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_save_periodic">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_save_periodic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">read_wait_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_saves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and saves T-Sweeper scans continuously at a specific interval until either file limit or timeout is</span>
+<span class="sd">        reached. (Files with duplicate values can be saved if wait between reads and buffer update are not properly</span>
+<span class="sd">        matched.)</span>
 
 <span class="sd">        :param file_loc: Location for the files to be saved</span>
 <span class="sd">        :param file_name: Name of the file. An integer number is appended to the file name.</span>
@@ -87,23 +119,53 @@
 <span class="sd">        :param num_saves: Number of files to be saved, default = 1</span>
 <span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        :raises FileNotFoundError: if input path is non-existent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_n_exec_periodic</span><span class="p">(</span>
+            <span class="n">read_wait_s</span><span class="p">,</span> <span class="n">num_saves</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.read_n_exec_updated"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_exec_updated">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_exec_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_saves</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="n">exec_fcn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and executes a function, when T-Sweeper buffer is updated, until either file limit or timeout is</span>
+<span class="sd">        reached. (Maximum execution frequency is limited by the function execution time, TSweeper system and the</span>
+<span class="sd">        computer.)</span>
+
+<span class="sd">        :param num_saves: Number of files to be saved</span>
+<span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds</span>
+<span class="sd">        :param exec_fcn: Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</span>
+<span class="sd">        :raises InstrumentIOError: if read operations fails</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">num_files</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
-            <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">or</span> <span class="n">num_files</span> <span class="o">&lt;=</span> <span class="n">num_saves</span><span class="p">:</span>
-                <span class="n">num_files</span> <span class="o">=</span> <span class="n">num_files</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">last_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">loop_num</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">and</span> <span class="n">loop_num</span> <span class="o">&lt;</span> <span class="n">num_saves</span><span class="p">:</span>
                 <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span>
-                <span class="n">last_read</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\\</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num_files</span><span class="p">),</span> <span class="n">act_data</span><span class="p">)</span>
-                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">read_wait_s</span> <span class="o">+</span> <span class="n">last_read</span> <span class="o">-</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_data</span><span class="p">:</span>
+                    <span class="n">loop_num</span> <span class="o">=</span> <span class="n">loop_num</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">exec_fcn</span><span class="p">(</span><span class="n">act_data</span><span class="p">,</span> <span class="n">loop_num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+                <span class="n">last_data</span> <span class="o">=</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Read operation failed!. </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.read_n_save_updated"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_n_save_updated">[docs]</a>    <span class="k">def</span> <span class="nf">read_n_save_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_saves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and saves updated T-Sweeper scans continuously until either file limit or timeout is reached. (Maximum</span>
+<span class="sd">        saving frequency is limited by the TSweeper and the computer.)</span>
+
+<span class="sd">        :param file_loc: Location for the files to be saved</span>
+<span class="sd">        :param file_name: Name of the file. An integer number is appended to the file name.</span>
+<span class="sd">        :param num_saves: Number of files to be saved, default = 1</span>
+<span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
+<span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        :raises FileNotFoundError: if input path is non-existent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_n_exec_updated</span><span class="p">(</span>
+            <span class="n">num_saves</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TSweeperClass.write_data"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

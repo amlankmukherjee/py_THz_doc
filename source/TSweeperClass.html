@@ -35,9 +35,17 @@
 <span id="tsweeperclass-module"></span><h1>TSweeperClass module<a class="headerlink" href="#module-TSweeperClass" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="TSweeperClass.TSweeperClass">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">TSweeperClass.</span></span><span class="sig-name descname"><span class="pre">TSweeperClass</span></span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">TSweeperClass.</span></span><span class="sig-name descname"><span class="pre">TSweeperClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_addr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'127.0.0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6006</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="TCPIPBaseClass.html#TCPIPBaseClass.TCPIPBaseClass" title="TCPIPBaseClass.TCPIPBaseClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">TCPIPBaseClass.TCPIPBaseClass</span></code></a></p>
 <p>Class to create T-Sweeper system object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_addr</strong> – IP address of the instrument as string. Defaults to ‘127.0.0.1’.</p></li>
+<li><p><strong>port</strong> – Port number of the instrument as an integer. Defaults to 6006.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.query_data">
 <span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.query_data" title="Permalink to this definition">¶</a></dt>
@@ -75,10 +83,51 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_save">
-<span class="sig-name descname"><span class="pre">read_n_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_wait_s</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_saves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads T-Sweeper scans continuously until either file limit or timeout is reached. Function saves each scan as a
-separate file in the specified file location.</p>
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_exec_periodic">
+<span class="sig-name descname"><span class="pre">read_n_exec_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait_btwn_reads_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_fcn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_exec_periodic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_exec_periodic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads periodically T-Sweeper and executes a function scans until either file limit or timeout is reached. (
+Files with duplicate values can be saved if wait between reads and buffer update are not properly matched.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wait_btwn_reads_s</strong> – Wait between data reads in seconds. Should be set equal to or slightly larger than the refresh rate of the TSweeper buffer. If set smaller than refresh rate, same data will be saved in the files until the buffer is updated.</p></li>
+<li><p><strong>num_loops</strong> – Number of files to be saved, default = 1</p></li>
+<li><p><strong>save_timeout_s</strong> – Timeout for the saving operation in seconds, default = 1 minute</p></li>
+<li><p><strong>exec_fcn</strong> – Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_exec_updated">
+<span class="sig-name descname"><span class="pre">read_n_exec_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_saves</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_fcn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_exec_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_exec_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and executes a function, when T-Sweeper buffer is updated, until either file limit or timeout is
+reached. (Maximum execution frequency is limited by the function execution time, TSweeper system and the
+computer.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_saves</strong> – Number of files to be saved</p></li>
+<li><p><strong>save_timeout_s</strong> – Timeout for the saving operation in seconds</p></li>
+<li><p><strong>exec_fcn</strong> – Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_save_periodic">
+<span class="sig-name descname"><span class="pre">read_n_save_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_wait_s</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_saves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_save_periodic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_save_periodic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and saves T-Sweeper scans continuously at a specific interval until either file limit or timeout is
+reached. (Files with duplicate values can be saved if wait between reads and buffer update are not properly
+matched.)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -90,7 +139,33 @@ separate file in the specified file location.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
+<li><p><strong>FileNotFoundError</strong> – if input path is non-existent</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_save_updated">
+<span class="sig-name descname"><span class="pre">read_n_save_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_saves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_save_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_save_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and saves updated T-Sweeper scans continuously until either file limit or timeout is reached. (Maximum
+saving frequency is limited by the TSweeper and the computer.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_loc</strong> – Location for the files to be saved</p></li>
+<li><p><strong>file_name</strong> – Name of the file. An integer number is appended to the file name.</p></li>
+<li><p><strong>num_saves</strong> – Number of files to be saved, default = 1</p></li>
+<li><p><strong>save_timeout_s</strong> – Timeout for the saving operation in seconds, default = 1 minute</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
+<li><p><strong>FileNotFoundError</strong> – if input path is non-existent</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
