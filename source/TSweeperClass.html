@@ -85,7 +85,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_exec_periodic">
 <span class="sig-name descname"><span class="pre">read_n_exec_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait_btwn_reads_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_fcn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_exec_periodic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_exec_periodic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads periodically T-Sweeper and executes a function scans until either file limit or timeout is reached. (
+<dd><p>Reads periodically T-Sweeper scans and executes a function until either file limit or timeout is reached. (
 Files with duplicate values can be saved if wait between reads and buffer update are not properly matched.)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -104,14 +104,14 @@ Files with duplicate values can be saved if wait between reads and buffer update
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.read_n_exec_updated">
-<span class="sig-name descname"><span class="pre">read_n_exec_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_saves</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_fcn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_exec_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_exec_updated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads and executes a function, when T-Sweeper buffer is updated, until either file limit or timeout is
+<span class="sig-name descname"><span class="pre">read_n_exec_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timeout_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_fcn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.read_n_exec_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.read_n_exec_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and executes a function when T-Sweeper buffer is updated, until either file limit or timeout is
 reached. (Maximum execution frequency is limited by the function execution time, TSweeper system and the
 computer.)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>num_saves</strong> – Number of files to be saved</p></li>
+<li><p><strong>num_loops</strong> – Number of files to be saved</p></li>
 <li><p><strong>save_timeout_s</strong> – Timeout for the saving operation in seconds</p></li>
 <li><p><strong>exec_fcn</strong> – Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</p></li>
 </ul>
