@@ -33,6 +33,7 @@
   <h1>Source code for TSweeperClass</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">CustomErrors</span> <span class="k">as</span> <span class="nn">Err</span>
 <span class="kn">from</span> <span class="nn">TCPIPBaseClass</span> <span class="kn">import</span> <span class="n">TCPIPBaseClass</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">import</span> <span class="nn">pyvisa</span>
@@ -45,21 +46,90 @@
 <span class="sd">    :param ip_addr: IP address of the instrument as string. Defaults to &#39;127.0.0.1&#39;.</span>
 <span class="sd">    :param port: Port number of the instrument as an integer. Defaults to 6006.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_is_polling</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_polling_thread</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">READ_DATA</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Data buffer for the TSweeper object. Buffer is updated in continuous polling is enabled.&quot;&quot;&quot;</span>
+    <span class="n">polling_freq</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Polling frequency at the instrument buffer. Shows 1000, if not appropriately set.&quot;&quot;&quot;</span>
+    <span class="n">buffer_upd_freq</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Update frequency of the object buffer. Shows 1000, if not appropriately set.&quot;&quot;&quot;</span>
+
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_save_data_in_file</span><span class="p">(</span><span class="n">data_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">file_full_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\\</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num_files</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
-            <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Read with Python - TSweeper TCP/IP</span><span class="se">\n</span><span class="s2">&quot;</span>
-                               <span class="s2">&quot;# Read time (s): </span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
-            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
-                <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Read with Python - TSweeper TCP/IP</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                   <span class="s2">&quot;# Read time (s): </span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                                   <span class="s2">&quot;# Frequency(MHz),Amplitude(A.U.),Phase(Rad)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span>
+                    <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Possibly folder to save does not exists. Details: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_addr</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6006</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TCPIPBaseClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TSweeperClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;TSweeper: Fraunhofer HHI/Toptica&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_continuous_poll_fcn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+        <span class="n">t_last_upd</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">last_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span><span class="p">:</span>
+            <span class="n">t_now</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polling_freq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_now</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Data read failed. Details: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">54</span><span class="p">:</span><span class="mi">123</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_data</span><span class="p">:</span>  <span class="c1"># compares first two data rows</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">READ_DATA</span> <span class="o">=</span> <span class="n">act_data</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buffer_upd_freq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_last_upd</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+                <span class="n">t_last_upd</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">last_data</span> <span class="o">=</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">54</span><span class="p">:</span><span class="mi">123</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_check_if_polling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Continuous polling is already running!&quot;</span>
+                <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentOperationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="TSweeperClass.start_continuous_polling"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.start_continuous_polling">[docs]</a>    <span class="k">def</span> <span class="nf">start_continuous_polling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait_after_start_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to start continuous polling of the instrument buffer. The object variable READ_DATA is updated</span>
+<span class="sd">        once the TSweeper buffer has changed. Change is verified by the first two numeric measurement data points.</span>
+
+<span class="sd">        :param wait_after_start_s: Wait time in seconds after polling starts. Should be set according to the TSweeper buffer update time. Defaults to 1 s.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_continuous_poll_fcn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait_after_start_s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.stop_continuous_polling"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.stop_continuous_polling">[docs]</a>    <span class="k">def</span> <span class="nf">stop_continuous_polling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to stop continuous polling of the instrument buffer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.is_polling"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.is_polling">[docs]</a>    <span class="k">def</span> <span class="nf">is_polling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function returns current polling state of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span></div>
 
 <div class="viewcode-block" id="TSweeperClass.read_1scan"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.read_1scan">[docs]</a>    <span class="k">def</span> <span class="nf">read_1scan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -68,16 +138,17 @@
 <span class="sd">        :returns: A numpy array of scan values in sets as (Frequency in MHz, Magnitude of current in A.U., Phase of the detector current in radians).</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_polling</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
-            <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-            <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
+            <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Read operation failed!. </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">arr_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">act_data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i_ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">act_data</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i_ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">act_data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">arr_data</span><span class="p">[</span><span class="n">i_ctr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> \
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">act_data</span><span class="p">[</span><span class="n">i_ctr</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">arr_data</span></div>
@@ -92,15 +163,17 @@
 <span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
 <span class="sd">        :param exec_fcn: Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        :raise InstrumentOperationError: if continuous polling function is ongoing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_polling</span><span class="p">()</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">curr_loop</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
             <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">and</span> <span class="n">curr_loop</span> <span class="o">&lt;</span> <span class="n">num_loops</span><span class="p">:</span>
                 <span class="n">curr_loop</span> <span class="o">=</span> <span class="n">curr_loop</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
                 <span class="n">last_read</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="n">exec_fcn</span><span class="p">(</span><span class="n">act_data</span><span class="p">,</span> <span class="n">curr_loop</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
                 <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">wait_btwn_reads_s</span> <span class="o">+</span> <span class="n">last_read</span> <span class="o">-</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
@@ -121,7 +194,8 @@
 <span class="sd">        :param num_saves: Number of files to be saved, default = 1</span>
 <span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
-<span class="sd">        :raises FileNotFoundError: if input path is non-existent</span>
+<span class="sd">        :raises CodeConfigurationError: if input path is non-existent</span>
+<span class="sd">        :raise InstrumentOperationError: if continuous polling function is ongoing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">read_n_exec_periodic</span><span class="p">(</span>
             <span class="n">read_wait_s</span><span class="p">,</span> <span class="n">num_saves</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
@@ -136,15 +210,17 @@
 <span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds</span>
 <span class="sd">        :param exec_fcn: Executable function with 2+ arguments to be run after each read. The first two arguments of the function must be the (1) read data as a list of strings and (2) loop number.</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
+<span class="sd">        :raise InstrumentOperationError: if continuous polling function is ongoing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_polling</span><span class="p">()</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
             <span class="n">last_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="n">curr_loop</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;=</span> <span class="n">save_timeout_s</span> <span class="ow">and</span> <span class="n">curr_loop</span> <span class="o">&lt;</span> <span class="n">num_loops</span><span class="p">:</span>
-                <span class="n">len_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
+                <span class="n">act_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">))))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">r</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_data</span><span class="p">:</span>
                     <span class="n">curr_loop</span> <span class="o">=</span> <span class="n">curr_loop</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="n">exec_fcn</span><span class="p">(</span><span class="n">act_data</span><span class="p">,</span> <span class="n">curr_loop</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -164,7 +240,8 @@
 <span class="sd">        :param num_saves: Number of files to be saved, default = 1</span>
 <span class="sd">        :param save_timeout_s: Timeout for the saving operation in seconds, default = 1 minute</span>
 <span class="sd">        :raises InstrumentIOError: if read operations fails</span>
-<span class="sd">        :raises FileNotFoundError: if input path is non-existent</span>
+<span class="sd">        :raise InstrumentOperationError: if continuous polling function is ongoing</span>
+<span class="sd">        :raises CodeConfigurationError: if input path is non-existent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">read_n_exec_updated</span><span class="p">(</span>
             <span class="n">num_saves</span><span class="p">,</span> <span class="n">save_timeout_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_data_in_file</span><span class="p">,</span> <span class="n">file_loc</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
@@ -194,7 +271,16 @@
 <span class="sd">        :raises CodeConfigurationError: when invoked</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">err_str</span> <span class="o">=</span> <span class="s2">&quot;Querying data is not allowed for TSweeper system!&quot;</span>
-        <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div></div>
+        <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">CodeConfigurationError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSweeperClass.close_comm"><a class="viewcode-back" href="../source/TSweeperClass.html#TSweeperClass.TSweeperClass.close_comm">[docs]</a>    <span class="k">def</span> <span class="nf">close_comm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function close connection to TSweeper</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_polling</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_polling_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

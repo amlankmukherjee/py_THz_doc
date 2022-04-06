@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SocketBaseClass &#8212; Terahertz Instrument Control 0.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for SocketBaseClass</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">CustomErrors</span> <span class="k">as</span> <span class="nn">Err</span>
+<span class="kn">from</span> <span class="nn">LabInstrumentInterface</span> <span class="kn">import</span> <span class="n">LabInstrumentInterface</span>
+
+
+<div class="viewcode-block" id="SocketBaseClass"><a class="viewcode-back" href="../source/SocketBaseClass.html#SocketBaseClass.SocketBaseClass">[docs]</a><span class="k">class</span> <span class="nc">SocketBaseClass</span><span class="p">(</span><span class="n">LabInstrumentInterface</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">instr_addr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">devName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_device_name</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connType</span> <span class="o">=</span> <span class="s2">&quot;TCPIP&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">instr_addr</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentInitialisationError</span><span class="p">(</span><span class="n">instr_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">devName</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_device_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;Generic Socket Device&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_termination</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to set read termination string for the instrument. This must be overridden for instrument specific</span>
+<span class="sd">        cases. Default value: &#39;\n&#39;</span>
+
+<span class="sd">        :return: &#39;\n&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+<div class="viewcode-block" id="SocketBaseClass.write_data"><a class="viewcode-back" href="../source/SocketBaseClass.html#SocketBaseClass.SocketBaseClass.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to send data/command to the serial Device</span>
+
+<span class="sd">        :param data_str: Data or command</span>
+<span class="sd">        :raises InstrumentIOError: if operation fails due to connection issues</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tot_sent</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">msg_2b_sent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_termination</span><span class="p">())</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">tot_sent</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg_2b_sent</span><span class="p">):</span>
+            <span class="n">last_sent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg_2b_sent</span><span class="p">[</span><span class="n">tot_sent</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="n">last_sent</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Socket connection broken!&quot;</span>
+                <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">tot_sent</span> <span class="o">=</span> <span class="n">tot_sent</span> <span class="o">+</span> <span class="n">last_sent</span></div>
+
+<div class="viewcode-block" id="SocketBaseClass.read_data"><a class="viewcode-back" href="../source/SocketBaseClass.html#SocketBaseClass.SocketBaseClass.read_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">byte_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to read data from the serial Device</span>
+
+<span class="sd">        :raises InstrumentIOError: if operation fails due to connection issues</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bytes_recd</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">bytes_recd</span> <span class="o">&lt;</span> <span class="n">byte_len</span><span class="p">:</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">byte_len</span> <span class="o">-</span> <span class="n">bytes_recd</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Socket connection broken! </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">bytes_recd</span> <span class="o">=</span> <span class="n">bytes_recd</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SocketBaseClass.query_data"><a class="viewcode-back" href="../source/SocketBaseClass.html#SocketBaseClass.SocketBaseClass.query_data">[docs]</a>    <span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query_to</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to send query to the serial device</span>
+
+<span class="sd">        :param query_to: wait timeout for response of query to finish, defaults to 1 second</span>
+<span class="sd">        :param query_str: query string</span>
+<span class="sd">        :return: query value</span>
+<span class="sd">        :raises InstrumentIOError: if operation fails due to connection issues</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">query_str</span><span class="p">)</span>
+        <span class="n">def_timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">gettimeout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">query_to</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Socket connection broken! </span><span class="si">{}</span><span class="s2">&quot;</span>
+                    <span class="k">raise</span> <span class="n">Err</span><span class="o">.</span><span class="n">InstrumentIOError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_termination</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">():</span>
+                <span class="k">break</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">def_timeout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SocketBaseClass.close_comm"><a class="viewcode-back" href="../source/SocketBaseClass.html#SocketBaseClass.SocketBaseClass.close_comm">[docs]</a>    <span class="k">def</span> <span class="nf">close_comm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function close connection to Serial and clear the buffers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SHUT_RD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instrObj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Terahertz Instrument Control</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Amlan kusum Mukherjee.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
