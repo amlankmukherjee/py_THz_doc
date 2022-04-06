@@ -46,6 +46,36 @@
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.READ_DATA">
+<span class="sig-name descname"><span class="pre">READ_DATA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">bytearray(b'')</span></em><a class="headerlink" href="#TSweeperClass.TSweeperClass.READ_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data buffer for the TSweeper object. Buffer is updated in continuous polling is enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.buffer_upd_freq">
+<span class="sig-name descname"><span class="pre">buffer_upd_freq</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#TSweeperClass.TSweeperClass.buffer_upd_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update frequency of the object buffer. Shows 1000, if not appropriately set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.close_comm">
+<span class="sig-name descname"><span class="pre">close_comm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.close_comm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.close_comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function close connection to TSweeper</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.is_polling">
+<span class="sig-name descname"><span class="pre">is_polling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.is_polling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.is_polling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returns current polling state of the object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.polling_freq">
+<span class="sig-name descname"><span class="pre">polling_freq</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#TSweeperClass.TSweeperClass.polling_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polling frequency at the instrument buffer. Shows 1000, if not appropriately set.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.query_data">
 <span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.query_data" title="Permalink to this definition">¶</a></dt>
@@ -97,7 +127,10 @@ Files with duplicate values can be saved if wait between reads and buffer update
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentOperationError" title="CustomErrors.InstrumentOperationError"><strong>InstrumentOperationError</strong></a> – if continuous polling function is ongoing</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -117,7 +150,10 @@ computer.)</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentOperationError" title="CustomErrors.InstrumentOperationError"><strong>InstrumentOperationError</strong></a> – if continuous polling function is ongoing</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -141,7 +177,8 @@ matched.)</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
-<li><p><strong>FileNotFoundError</strong> – if input path is non-existent</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.CodeConfigurationError" title="CustomErrors.CodeConfigurationError"><strong>CodeConfigurationError</strong></a> – if input path is non-existent</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentOperationError" title="CustomErrors.InstrumentOperationError"><strong>InstrumentOperationError</strong></a> – if continuous polling function is ongoing</p></li>
 </ul>
 </dd>
 </dl>
@@ -164,10 +201,29 @@ saving frequency is limited by the TSweeper and the computer.)</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentIOError" title="CustomErrors.InstrumentIOError"><strong>InstrumentIOError</strong></a> – if read operations fails</p></li>
-<li><p><strong>FileNotFoundError</strong> – if input path is non-existent</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.InstrumentOperationError" title="CustomErrors.InstrumentOperationError"><strong>InstrumentOperationError</strong></a> – if continuous polling function is ongoing</p></li>
+<li><p><a class="reference internal" href="CustomErrors.html#CustomErrors.CodeConfigurationError" title="CustomErrors.CodeConfigurationError"><strong>CodeConfigurationError</strong></a> – if input path is non-existent</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.start_continuous_polling">
+<span class="sig-name descname"><span class="pre">start_continuous_polling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait_after_start_s</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.start_continuous_polling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.start_continuous_polling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to start continuous polling of the instrument buffer. The object variable READ_DATA is updated
+once the TSweeper buffer has changed. Change is verified by the first two numeric measurement data points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wait_after_start_s</strong> – Wait time in seconds after polling starts. Should be set according to the TSweeper buffer update time. Defaults to 1 s.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TSweeperClass.TSweeperClass.stop_continuous_polling">
+<span class="sig-name descname"><span class="pre">stop_continuous_polling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TSweeperClass.html#TSweeperClass.stop_continuous_polling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TSweeperClass.TSweeperClass.stop_continuous_polling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to stop continuous polling of the instrument buffer</p>
 </dd></dl>
 
 <dl class="py method">
